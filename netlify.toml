@@ -1,0 +1,7 @@
+[build]
+  publish = "static"
+  functions = "functions"
+
+[dev]
+  functions = "functions"
+  targetPort = 8888

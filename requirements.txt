@@ -1,0 +1,4 @@
+Flask==2.2.3
+pandas==1.5.3
+kaggle==1.5.12
+werkzeug==2.2.3

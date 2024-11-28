@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California Crash Data</title>
+    <style>
+        /* Basic styles for the layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #search {
+            padding: 10px;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+        #cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            margin: 10px;
+            padding: 15px;
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="search-container">
+        <input type="text" id="search" placeholder="Search crash data by location..." onkeyup="searchData()">
+    </div>
+
+    <div id="cards-container"></div>
+</div>
+
+<script>
+// Function to fetch and display data from the Flask API
+function searchData() {
+    let query = document.getElementById("search").value;
+
+    // Fetch data from the Flask API
+    fetch(`/api/crash-data?query=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("cards-container");
+            container.innerHTML = ''; // Clear previous results
+
+            // Loop through data and create cards for each crash
+            data.forEach(crash => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <h3>Case ID: ${crash.case_id}</h3>
+                    <p><strong>Year:</strong> ${crash.year}</p>
+                    <p><strong>Location:</strong> ${crash.county_city_location}</p>
+                    <p><strong>Officer ID:</strong> ${crash.officer_id}</p>
+                    <p><strong>Special Condition:</strong> ${crash.special_condition}</p>
+                    <p><strong>At Fault:</strong> ${crash.at_fault}</p>
+                    <p><strong>Direction of Travel:</strong> ${crash.direction_of_travel}</p>
+                `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching crash data:', error);
+        });
+}
+</script>
+
+</body>
+</html>
